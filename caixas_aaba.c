@@ -12,8 +12,9 @@ int main(void) {
 
     scanf("%d", &totalCaixas);
 
-    while(1){
+    while(totalCaixas != 0){
         scanf("%d", &qtdPilhas);
+
 
         pilha *listaPilhas[qtdPilhas];
         for(numPilha = 0; numPilha < qtdPilhas; numPilha++){
@@ -44,24 +45,66 @@ int main(void) {
             int tamPilhaEsquerda, tamPilhaDireita;
             tamPilhaDireita = listaPilhas[pilhaInventario + 1]->tamanho;
             tamPilhaEsquerda = listaPilhas[pilhaInventario - 1]->tamanho;
-            
+
             if (tamPilhaEsquerda >= nivelInventario && tamPilhaDireita >= nivelInventario){
                 caixasRetiradas = caixasRetiradas + 1;
                 if(tamPilhaEsquerda <= tamPilhaDireita){
-                    caixasRetiradas += tamPilhaEsquerda - nivelInventario;
+                    int auxiliar = auxiliar;
+                    caixasRetiradas += auxiliar - nivelInventario;
+                    if (nivelInventario == 1){
+                        caixasRetiradas += 1;
+                    }
+
+                    int referencia = 2;
+                    while (pilhaInventario - referencia >= 0){
+                        int tamMaisEsquerda = listaPilhas[pilhaInventario - referencia]->tamanho;
+                        if(tamMaisEsquerda >= auxiliar){
+                            caixasRetiradas += 1;
+                            caixasRetiradas += tamMaisEsquerda - auxiliar;
+                            auxiliar = tamMaisEsquerda;
+                        }
+                        else if(tamMaisEsquerda == nivelInventario){
+                            caixasRetiradas += 1;
+                        }
+                        else{
+                            break;
+                        }
+                        referencia++;
+                    }
                 }
                 else{
-                    caixasRetiradas += tamPilhaDireita - nivelInventario;
+                    int auxiliar = tamPilhaDireita;                    
+                    caixasRetiradas += auxiliar - nivelInventario;
+                    if (nivelInventario == 1){
+                        caixasRetiradas += 1;
+                    }
+                    int referencia = 2;
+                    while (pilhaInventario + referencia < qtdPilhas){
+                        int tamMaisDireita = listaPilhas[pilhaInventario + referencia]->tamanho;
+                        if(tamMaisDireita >= auxiliar){
+                            caixasRetiradas += 1;
+                            caixasRetiradas += tamMaisDireita - auxiliar;
+                            auxiliar = tamMaisDireita;
+                        }
+                        else if(tamMaisDireita == nivelInventario){
+                            caixasRetiradas +=1 ;
+                        }
+                        else{
+                            break;
+                        }
+                        referencia++;
+                    }
                 }
             }
         }
         scanf("%d", &totalCaixas);
         if(totalCaixas == 0){
             printf("%d", caixasRetiradas);
-            break;
         }
-        printf("%d\n", caixasRetiradas);
-
+        else{
+            printf("%d\n", caixasRetiradas);
+        }
+        
     }
     return 0;
 }
