@@ -35,68 +35,52 @@ int main(void) {
             }
         }
 
-        int caixasRetiradas = 0;
         int tamPilhaInventario = listaPilhas[pilhaInventario]->tamanho;
+        int somaDireita = 0;
+        int somaEsquerda = 0;
 
         if (nivelInventario < tamPilhaInventario){
-            caixasRetiradas += tamPilhaInventario - nivelInventario;
+            somaDireita += tamPilhaInventario - nivelInventario;
+            somaEsquerda += tamPilhaInventario - nivelInventario;
         }
-        if (pilhaInventario != 0 && pilhaInventario != qtdPilhas - 1){
-            int tamPilhaEsquerda, tamPilhaDireita;
-            tamPilhaDireita = listaPilhas[pilhaInventario + 1]->tamanho;
-            tamPilhaEsquerda = listaPilhas[pilhaInventario - 1]->tamanho;
 
-            if (tamPilhaEsquerda >= nivelInventario && tamPilhaDireita >= nivelInventario){
-                caixasRetiradas = caixasRetiradas + 1;
-                if(tamPilhaEsquerda <= tamPilhaDireita){
-                    int auxiliar = auxiliar;
-                    caixasRetiradas += auxiliar - nivelInventario;
-                    if (nivelInventario == 1){
-                        caixasRetiradas += 1;
-                    }
+        int tamPilhaEsquerda, tamPilhaDireita;
+        int referencia = 1;
 
-                    int referencia = 2;
-                    while (pilhaInventario - referencia >= 0){
-                        int tamMaisEsquerda = listaPilhas[pilhaInventario - referencia]->tamanho;
-                        if(tamMaisEsquerda >= auxiliar){
-                            caixasRetiradas += 1;
-                            caixasRetiradas += tamMaisEsquerda - auxiliar;
-                            auxiliar = tamMaisEsquerda;
-                        }
-                        else if(tamMaisEsquerda == nivelInventario){
-                            caixasRetiradas += 1;
-                        }
-                        else{
-                            break;
-                        }
-                        referencia++;
-                    }
-                }
-                else{
-                    int auxiliar = tamPilhaDireita;                    
-                    caixasRetiradas += auxiliar - nivelInventario;
-                    if (nivelInventario == 1){
-                        caixasRetiradas += 1;
-                    }
-                    int referencia = 2;
-                    while (pilhaInventario + referencia < qtdPilhas){
-                        int tamMaisDireita = listaPilhas[pilhaInventario + referencia]->tamanho;
-                        if(tamMaisDireita >= auxiliar){
-                            caixasRetiradas += 1;
-                            caixasRetiradas += tamMaisDireita - auxiliar;
-                            auxiliar = tamMaisDireita;
-                        }
-                        else if(tamMaisDireita == nivelInventario){
-                            caixasRetiradas +=1 ;
-                        }
-                        else{
-                            break;
-                        }
-                        referencia++;
-                    }
-                }
+        while (pilhaInventario + referencia < qtdPilhas){
+            tamPilhaDireita = listaPilhas[pilhaInventario + referencia]->tamanho;
+            if(tamPilhaDireita < pilhaInventario && tamPilhaDireita < nivelInventario){
+                break;
             }
+            if(tamPilhaDireita >= nivelInventario){
+                somaDireita += tamPilhaDireita - nivelInventario;
+                somaDireita += 1;
+            }
+            referencia++;
         }
+        referencia = 1;
+        while (pilhaInventario - referencia >= 0){
+            if(tamPilhaEsquerda < pilhaInventario && tamPilhaEsquerda < nivelInventario){
+                break;
+            }
+            tamPilhaEsquerda = listaPilhas[pilhaInventario - referencia]->tamanho;
+            if(tamPilhaEsquerda >= nivelInventario){
+                somaEsquerda += tamPilhaEsquerda - nivelInventario;
+                somaEsquerda += 1;
+            }
+            referencia++;
+        }
+        
+
+        int caixasRetiradas;
+        if(somaDireita >= somaEsquerda){
+            caixasRetiradas = somaEsquerda;
+        }
+        else{
+            caixasRetiradas = somaDireita;
+        }
+
+        
         scanf("%d", &totalCaixas);
         if(totalCaixas == 0){
             printf("%d", caixasRetiradas);
